@@ -6,7 +6,7 @@ import java.io.File;
 /**
  * @Author：ljz
  * @Date：2022/10/14 19:16
- * @Description:
+ * @Description: 词法分析器的程序入口
  */
 public class Main {
 
