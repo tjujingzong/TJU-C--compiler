@@ -6,13 +6,13 @@ package CompilersProject.LexicalAnalysis;
  * @Description: NFA中的边
  */
 public class Edge {
-    public Node fromNode;
-    public Node toNode;
+    public int fromNodeId;
+    public int toNodeId;
     public String tag;//边上的符号标记
 
-    public Edge(Node fromNode, Node toNode, String tag) {
-        this.fromNode = fromNode;
-        this.toNode = toNode;
+    public Edge(int fromNodeId, int toNodeId, String tag) {
+        this.fromNodeId = fromNodeId;
+        this.toNodeId = toNodeId;
         this.tag = tag;
     }
 }
