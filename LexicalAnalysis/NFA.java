@@ -8,15 +8,18 @@ import java.util.ArrayList;
  * @Description: 构造NFA
  */
 public class NFA {
-    public ArrayList<Node> nodeList;
-    public ArrayList<Edge> edgeList;
-    public int nowNodeId = 0;
-    public int startNodeId = 0;
+    public ArrayList<Node> nodeList = new ArrayList<>();
+    public ArrayList<Edge> edgeList = new ArrayList<>();
+    public String[] tags = {
+            "+", "-", "*", "/", "%", "=", "(", ")", "{", "}", ";", ",",
+            ">", "^=", "<", "|", "&", "_a-zA-Z", "_0-9a-zA-Z", "^_0-9a-zA-Z",
+            "1-9", "0-9", "^0-9"
+    };
 
     public NFA() {
         String[] directOP = {"+", "-", "*", "/", "%", "="};
         String[] SE = {"(", ")", "{", "}", ";", ","};
-        nodeList.add(new Node(0, false, false, ""));
+        nodeList.add(new Node(0, false, false, "epsilon"));
         edgeList.add(new Edge(0, 0, " "));
         for (int i = 1; i <= 6; i++) {
             nodeList.add(new Node(i, true, false, "OP"));
@@ -31,7 +34,7 @@ public class NFA {
         nodeList.add(new Node(14, true, false, "OP"));
         edgeList.add(new Edge(13, 14, "="));
         nodeList.add(new Node(15, true, true, "OP"));
-        edgeList.add(new Edge(13, 15, "^="));
+        edgeList.add(new Edge(13, 15, "epsilon"));
 
         nodeList.add(new Node(16, false, false, ""));
         edgeList.add(new Edge(0, 16, "<"));
@@ -54,12 +57,25 @@ public class NFA {
         nodeList.add(new Node(24, true, true, "KWorIDN"));
         edgeList.add(new Edge(0, 23, "_a-zA-Z"));
         edgeList.add(new Edge(23, 23, "_0-9a-zA-Z"));
-        edgeList.add(new Edge(23, 23, "^_0-9a-zA-Z"));
+        edgeList.add(new Edge(23, 24, "^_0-9a-zA-Z"));
 
         nodeList.add(new Node(25, false, false, ""));
         nodeList.add(new Node(26, true, true, "INT"));
         edgeList.add(new Edge(0, 25, "1-9"));
         edgeList.add(new Edge(25, 25, "0-9"));
         edgeList.add(new Edge(25, 26, "^0-9"));
+    }
+
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        for (Edge e : edgeList) {
+            sb.append(e.fromNodeId);
+            sb.append("----- ");
+            sb.append(e.tag);
+            sb.append(" ----->");
+            sb.append(e.toNodeId);
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }

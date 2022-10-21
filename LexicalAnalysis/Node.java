@@ -1,11 +1,13 @@
 package CompilersProject.LexicalAnalysis;
 
+import java.util.Comparator;
+
 /**
  * @Author：ljz
  * @Date：2022/10/14 20:47
  * @Description: NFA图中的点
  */
-public class Node {
+public class Node implements Comparable<Node> {
     public int id;
     public boolean isLast;
     public boolean needRollback;
@@ -16,5 +18,11 @@ public class Node {
         this.isLast = isLast;
         this.needRollback = needRollback;
         this.type = type;
+    }
+
+
+    @Override
+    public int compareTo(Node o) {
+        return this.id - o.id;
     }
 }
