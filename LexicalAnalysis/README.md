@@ -30,6 +30,8 @@
 
 如下图：
 
+![](https://raw.githubusercontent.com/Lixinran1826/Compilers-Project/master/pictures/%E7%8A%B6%E6%80%81%E8%BD%AC%E5%8C%96.jpg?token=GHSAT0AAAAAABZXTEVD6JQYNOTIFFO4B7EQY2SX5ZQ)
+
 
 
 ### 算法实现
@@ -102,7 +104,7 @@ public class Edge {
 	根据点集和边集构造NFA。
 	
     * `nodeList`用于存储点的ArrayList
-    * `edgeList`用于存储点的ArrayList
+    * `edgeList`用于存储边的ArrayList
     * `tags`存储状态转移的标签
 ```java
 public class NFA {
