@@ -30,8 +30,7 @@
 
 如下图：
 
-![](https://raw.githubusercontent.com/Lixinran1826/Compilers-Project/master/pictures/%E7%8A%B6%E6%80%81%E8%BD%AC%E5%8C%96.jpg?token=GHSAT0AAAAAABZXTEVD6JQYNOTIFFO4B7EQY2SX5ZQ)
-
+![](../pictures/状态转化.jpg)
 
 
 ### 算法实现
