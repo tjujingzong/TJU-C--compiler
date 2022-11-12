@@ -27,7 +27,7 @@ class Lexer {
         while (i < text.length()) {
             // 需要跳过的情况
             Character ch = text.charAt(i);
-            if (token_now.equals("") && (ch == '\n' || ch == ' ')) {
+            if (token_now.equals("") && (ch == '\n' || ch == ' ' || ch == '\t')) {
                 i += 1;
                 continue;
             }
@@ -59,7 +59,7 @@ class Lexer {
             }
             // 匹配失败，则抛出异常
             else {
-                System.out.println(ID);
+                System.out.println(ch);
                 System.out.println("Lexical error: 不符合c--词法！");
                 return;
             }

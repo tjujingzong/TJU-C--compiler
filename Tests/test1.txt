@@ -1,0 +1,5 @@
+int a;
+void func(){
+	a=10;
+	return 0;
+}
