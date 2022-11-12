@@ -12,8 +12,8 @@ public class Main {
         // TODO Auto-generated method stub
         //默认是当前工程文件夹
         String dir = "src/CompilersProject/Tests/";
-        String in = "test0.txt";
-        String out = "test0_out.txt";
+        String in = "test5.txt";
+        String out = "test5_out.txt";
 
         ReadTxt r = new ReadTxt();
         NFA nfa = new NFA();
