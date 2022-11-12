@@ -11,13 +11,19 @@ public class Main {
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         //默认是当前工程文件夹
-        String path = "src/CompilersProject/Tests/test0.txt";
+        String dir = "src/CompilersProject/Tests/";
+        String in = "test0.txt";
+        String out = "test0_out.txt";
+
         ReadTxt r = new ReadTxt();
-        System.out.println(r.readTxt(path));
         NFA nfa = new NFA();
-        System.out.println(nfa);
         DFA dfa = new DFA(nfa);
         dfa.determine();
         System.out.println(dfa);
+        TokenTable tokenTable = new TokenTable();
+        Lexer lexer = new Lexer(r.readTxt(dir + in), tokenTable, dfa);
+        lexer.run();
+        tokenTable.printTokenTable();
+        tokenTable.saveTokenTable(dir + out);
     }
 }
