@@ -20,7 +20,7 @@ public class NFA {
         String[] directOP = {"[+]", "-", "[*]", "/", "%", "="};
         String[] SE = {"[(]", "[)]", "[{]", "[}]", ";", ","};
         nodeList.add(new Node(0, false, false, ""));
-        edgeList.add(new Edge(0, 0, ""));
+        edgeList.add(new Edge(0, 0, "epsilon"));
         for (int i = 1; i <= 6; i++) {
             nodeList.add(new Node(i, true, false, "OP"));
             edgeList.add(new Edge(0, i, directOP[i - 1]));
