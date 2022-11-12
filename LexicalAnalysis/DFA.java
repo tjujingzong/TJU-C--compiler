@@ -105,7 +105,7 @@ public class DFA {
                     continue;
                 if (!nodeArrayList.contains(moveNodeSet)) {
                     nodeArrayList.add(moveNodeSet);
-                    Node firstInSet = nodeSet.first();
+                    Node firstInSet = moveNodeSet.first();
                     nowId++;
                     nodeList.add(new Node(nowId, firstInSet.isLast, firstInSet.needRollback, firstInSet.type));
                     edgeList.add(new Edge(pointer, nowId, tag));
@@ -116,8 +116,8 @@ public class DFA {
             }
             pointer++;
         }
-        nodeList = nfa.nodeList;
-        edgeList = nfa.edgeList;
+        //nodeList = nfa.nodeList;
+        //edgeList = nfa.edgeList;
     }
 
     public String toString() {
