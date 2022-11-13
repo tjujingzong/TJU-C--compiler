@@ -1,8 +1,5 @@
 package CompilersProject.LexicalAnalysis;
 
-import java.io.File;
-import java.util.Scanner;
-
 /**
  * @Author：ljz
  * @Date：2022/11/12 9:59

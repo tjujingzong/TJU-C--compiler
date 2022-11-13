@@ -98,7 +98,7 @@ public class ReadTxt {
 
 如下图：
 
-![](../pictures/状态转化.jpg)
+![](../pictures/nfa.png)
 
 ####  2.2算法实现
 
@@ -193,10 +193,11 @@ public class NFA {
 ```
 
 ##### 2.2.2确定化实现
-DFA的数据结构与NFA类似，此处不再赘述。
-NFA到DFA的转变需要我们实现确定化算法。
-首先从$$s_0$$出发，仅经过任意条$$\epsilon$$箭弧能够到达的状态组成的集合$$I$$作为$$M'$$的初态$$q_0$$ .
-分别把从$$q_0$$(对应于$$M$$的状态子集$$I$$)出发，经过任意$$a\in \sum$$的$$a$$弧转换$$I_a$$所组成的集合作为$$M'$$的状态，如此继续，直到不再有新的状态为止。
+- DFA的数据结构与NFA类似，此处不再赘述。
+
+- NFA到DFA的转变需要我们实现确定化算法。
+- 首先从$$s_0$$出发，仅经过任意条$$\epsilon$$箭弧能够到达的状态组成的集合$$I$$作为$$M'$$的初态$$q_0$$ .
+- 分别把从$$q_0$$(对应于$$M$$的状态子集$$I$$)出发，经过任意$$a\in \sum$$的$$a$$弧转换$$I_a$$所组成的集合作为$$M'$$的状态，如此继续，直到不再有新的状态为止。
 
 ```java
 public TreeSet<Node> epsilonClosure(TreeSet<Node> nodeSet) {
@@ -261,9 +262,105 @@ public TreeSet<Node> epsilonClosure(TreeSet<Node> nodeSet) {
     }
 ```
 
+##### 2.2.3最小化实现
+
+- 构造状态的初始划分$\Pi$：终态$S_t$ 和非终态$S- S_t$两组
+
+- 对$\Pi$施用传播性原则构造新划分$\Pi_n$
+
+- 如$\Pi_n$ == $\Pi_f$,则令 $\Pi_f$= $\Pi$ 并继续步骤4，否则$\Pi$ := $\Pi_n$重复2 
+
+- 为 $\Pi_f$中的每一组选一代表，这些代表构成M’的状态。若s是一代表,且δ(s,a)=t, 令r是t组的代表，则M’中有一转换δ’(s, a)=r。 M’ 的开始状态是含有$s_0$的那组的代表, M’的终态是含有st的那组的代表
+
+- 去掉M’中的死状态
+
+```java
+    public void minimize() {
+        //最小化算法
+        ArrayList<TreeSet<Node>> P = new ArrayList<>();
+        TreeSet<Node> F = new TreeSet<>();
+        TreeSet<Node> NF = new TreeSet<>();
+        for (Node n : nodeList) {
+            if (n.isLast) F.add(n);
+            else NF.add(n);
+        }
+        P.add(F);
+        P.add(NF);
+        ArrayList<TreeSet<Node>> W = new ArrayList<>();
+        W.add(F);
+        W.add(NF);
+        while (!W.isEmpty()) {
+            TreeSet<Node> A = W.get(0);
+            W.remove(0);
+            TreeSet<Node> premove = new TreeSet<>();
+            for (String tag : nfa.tags) {
+                ArrayList<TreeSet<Node>> X = new ArrayList<>();
+                for (TreeSet<Node> p : P) {
+                    TreeSet<Node> pTag = new TreeSet<>();
+                    TreeSet<Node> pNotTag = new TreeSet<>();
+                    for (Node n : p) {
+                        for (Edge e : edgeList) {
+                            if (e.fromNodeId == n.id && e.tag.equals(tag) || e.toNodeId == n.id && e.tag.equals(tag)) {
+                                pTag.add(n);
+                            }
+                        }
+                    }
+                    for (Node n : p) {
+                        if (!pTag.contains(n)) {
+                            pNotTag.add(n);
+                        }
+                    }
+                    if (!pTag.isEmpty() && !pNotTag.isEmpty()) {
+                        X.add(pTag);
+                        X.add(pNotTag);
+                        premove = p;
+                        break;
+                    }
+                }
+                P.remove(premove);
+                for (TreeSet<Node> x : X) {
+                    P.add(x);
+                    if (!W.contains(x)) {
+                        W.add(x);
+                    } else W.remove(x);
+                }
+            }
+        }
+        ArrayList<Node> newNodeList = new ArrayList<>();
+        ArrayList<Edge> newEdgeList = new ArrayList<>();
+        for (int i = 0; i < P.size(); i++) {
+            TreeSet<Node> p = P.get(i);
+            Node firstInSet = p.first();
+            newNodeList.add(new Node(i, firstInSet.isLast, firstInSet.needRollback, firstInSet.type));
+        }
+        for (Edge e : edgeList) {
+            int fromNodeId = 0;
+            int toNodeId = 0;
+            for (int i = 0; i < P.size(); i++) {
+                TreeSet<Node> p = P.get(i);
+                if (p.contains(nodeList.get(e.fromNodeId))) {
+                    fromNodeId = i;
+                }
+                if (p.contains(nodeList.get(e.toNodeId))) {
+                    toNodeId = i;
+                }
+            }
+            newEdgeList.add(new Edge(fromNodeId, toNodeId, e.tag));
+        }
+        edgeList = newEdgeList;
+        nodeList = newNodeList;
+        startId = 1;
+        nowId = 1;
+    }
+```
+
+  
+
 #### 三、结果输出
+
 对于词法分析器的结果输出，同样借助面向对象的思想。
 Token类为代词符号。
+
 - `lexeme`待测代码中的单词符号
 - `tokenTpye`单词符号种别
 - `tokenNum`单词符号内容
