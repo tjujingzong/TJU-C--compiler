@@ -1,7 +1,5 @@
 package CompilersProject.LexicalAnalysis;
 
-import java.util.Comparator;
-
 /**
  * @Author：ljz
  * @Date：2022/10/14 20:47

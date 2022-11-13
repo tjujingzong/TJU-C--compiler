@@ -19,6 +19,7 @@ public class Main {
         NFA nfa = new NFA();
         DFA dfa = new DFA(nfa);
         dfa.determine();
+        dfa.minimize();
         System.out.println(dfa);
         TokenTable tokenTable = new TokenTable();
         Lexer lexer = new Lexer(r.readTxt(dir + in), tokenTable, dfa);

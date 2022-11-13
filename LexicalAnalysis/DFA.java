@@ -120,6 +120,84 @@ public class DFA {
         //edgeList = nfa.edgeList;
     }
 
+    public void minimize() {
+        //最小化算法
+        ArrayList<TreeSet<Node>> P = new ArrayList<>();
+        TreeSet<Node> F = new TreeSet<>();
+        TreeSet<Node> NF = new TreeSet<>();
+        for (Node n : nodeList) {
+            if (n.isLast) F.add(n);
+            else NF.add(n);
+        }
+        P.add(F);
+        P.add(NF);
+        ArrayList<TreeSet<Node>> W = new ArrayList<>();
+        W.add(F);
+        W.add(NF);
+        while (!W.isEmpty()) {
+            TreeSet<Node> A = W.get(0);
+            W.remove(0);
+            TreeSet<Node> premove = new TreeSet<>();
+            for (String tag : nfa.tags) {
+                ArrayList<TreeSet<Node>> X = new ArrayList<>();
+                for (TreeSet<Node> p : P) {
+                    TreeSet<Node> pTag = new TreeSet<>();
+                    TreeSet<Node> pNotTag = new TreeSet<>();
+                    for (Node n : p) {
+                        for (Edge e : edgeList) {
+                            if (e.fromNodeId == n.id && e.tag.equals(tag) || e.toNodeId == n.id && e.tag.equals(tag)) {
+                                pTag.add(n);
+                            }
+                        }
+                    }
+                    for (Node n : p) {
+                        if (!pTag.contains(n)) {
+                            pNotTag.add(n);
+                        }
+                    }
+                    if (!pTag.isEmpty() && !pNotTag.isEmpty()) {
+                        X.add(pTag);
+                        X.add(pNotTag);
+                        premove = p;
+                        break;
+                    }
+                }
+                P.remove(premove);
+                for (TreeSet<Node> x : X) {
+                    P.add(x);
+                    if (!W.contains(x)) {
+                        W.add(x);
+                    } else W.remove(x);
+                }
+            }
+        }
+        ArrayList<Node> newNodeList = new ArrayList<>();
+        ArrayList<Edge> newEdgeList = new ArrayList<>();
+        for (int i = 0; i < P.size(); i++) {
+            TreeSet<Node> p = P.get(i);
+            Node firstInSet = p.first();
+            newNodeList.add(new Node(i, firstInSet.isLast, firstInSet.needRollback, firstInSet.type));
+        }
+        for (Edge e : edgeList) {
+            int fromNodeId = 0;
+            int toNodeId = 0;
+            for (int i = 0; i < P.size(); i++) {
+                TreeSet<Node> p = P.get(i);
+                if (p.contains(nodeList.get(e.fromNodeId))) {
+                    fromNodeId = i;
+                }
+                if (p.contains(nodeList.get(e.toNodeId))) {
+                    toNodeId = i;
+                }
+            }
+            newEdgeList.add(new Edge(fromNodeId, toNodeId, e.tag));
+        }
+        edgeList = newEdgeList;
+        nodeList = newNodeList;
+        startId = 1;
+        nowId = 1;
+    }
+
     public String toString() {
         StringBuffer sb = new StringBuffer();
         System.out.println("DFA节点数:" + nodeList.size());
