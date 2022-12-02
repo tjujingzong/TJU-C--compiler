@@ -98,7 +98,7 @@ public class ReadTxt {
 
 如下图：
 
-![](../pictures/nfa.png)
+![](../pictures/状态转化.jpg)
 
 ####  2.2算法实现
 

@@ -12,8 +12,8 @@ public class NFA {
     public ArrayList<Edge> edgeList = new ArrayList<>();
     public String[] tags = {
             "[+]", "-", "[*]", "/", "%", "=", "[(]", "[)]", "[{]", "[}]", ";", ",",
-            ">", "[^=]", "<", "|", "&", "[_a-zA-Z]", "[_0-9a-zA-Z]", "[^_0-9a-zA-Z]",
-            "[1-9]", "[0-9]", "[^0-9]"
+            ">", "[^=]", "<", "[|]", "&", "[_a-zA-Z]", "[_0-9a-zA-Z]", "[^_0-9a-zA-Z]",
+            "[1-9]", "[0-9]", "[^0-9]","!"
     };
 
     public NFA() {
@@ -21,10 +21,14 @@ public class NFA {
         String[] SE = {"[(]", "[)]", "[{]", "[}]", ";", ","};
         nodeList.add(new Node(0, false, false, ""));
         edgeList.add(new Edge(0, 0, "epsilon"));
-        for (int i = 1; i <= 6; i++) {
+        for (int i = 1; i < 6; i++) {
             nodeList.add(new Node(i, true, false, "OP"));
             edgeList.add(new Edge(0, i, directOP[i - 1]));
         }
+
+        nodeList.add(new Node(6, false, false, ""));
+        edgeList.add(new Edge(0, 6, "="));
+
         for (int i = 1; i <= 6; i++) {
             nodeList.add(new Node(i + 6, true, false, "SE"));
             edgeList.add(new Edge(0, i + 6, SE[i - 1]));
@@ -41,12 +45,12 @@ public class NFA {
         nodeList.add(new Node(17, true, false, "OP"));
         edgeList.add(new Edge(16, 17, "="));
         nodeList.add(new Node(18, true, true, "OP"));
-        edgeList.add(new Edge(16, 18, "^="));
+        edgeList.add(new Edge(16, 18, "[^=]"));
 
         nodeList.add(new Node(19, false, false, ""));
         nodeList.add(new Node(20, true, false, "OP"));
-        edgeList.add(new Edge(0, 19, "|"));
-        edgeList.add(new Edge(19, 20, "|"));
+        edgeList.add(new Edge(0, 19, "[|]"));
+        edgeList.add(new Edge(19, 20, "[|]"));
 
         nodeList.add(new Node(21, false, false, ""));
         nodeList.add(new Node(22, true, false, "OP"));
@@ -64,6 +68,18 @@ public class NFA {
         edgeList.add(new Edge(0, 25, "[0-9]"));
         edgeList.add(new Edge(25, 25, "[0-9]"));
         edgeList.add(new Edge(25, 26, "[^0-9]"));
+
+        nodeList.add(new Node(27, false, false, ""));
+        edgeList.add(new Edge(0, 27, "!"));
+        nodeList.add(new Node(28, true, false, "OP"));
+        edgeList.add(new Edge(27, 28, "="));
+
+
+        nodeList.add(new Node(29, true, false, "OP"));
+        edgeList.add(new Edge(6, 29, "="));
+        nodeList.add(new Node(30, true, true, "OP"));
+        edgeList.add(new Edge(6, 30, "[^=]"));
+
     }
 
     public String toString() {
